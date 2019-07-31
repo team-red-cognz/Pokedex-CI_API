@@ -74,7 +74,7 @@
 //         var r = res.body
 //         console.log(r.name)
 //         console.log(r.id)
-//         // console.log(r.abilities[2].ability.name)
+//         // console.log(r.abilities[0].ability.name)
 //         r.abilities.forEach(element => {
 //             console.log(element.ability.name)
 //         });
