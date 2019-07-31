@@ -1,7 +1,7 @@
 var mongoose = require("mongoose");
 
 
-var abilityschema = new Schema(
+var abilityschema = mongoose.Schema(
     {
         abilityOne: {
             type: String

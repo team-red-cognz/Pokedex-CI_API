@@ -5,7 +5,9 @@ var config = require('./config');
 var app = express();
 var pokeRoutes = require("./pokemon-routes");
 
-app.use(cors({origin: true}));
+
+
+app.use(cors({ origin: true }));
 
 app.use(express.json());
 
@@ -30,3 +32,6 @@ mongoose.connect(
             console.log(`Server running on port ${config.app.PORT}`);
         });
     });
+
+
+
