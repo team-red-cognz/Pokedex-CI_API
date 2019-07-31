@@ -16,7 +16,7 @@ var unirest = require('unirest');
 app.get('/getPokemon', function (err, resp, body) {
             
             console.log('hello')
-            var poke_name = 'ekans'
+            var poke_name = 'blastoise'
             var eq = [];
     
             var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name + '/'); 
@@ -32,12 +32,16 @@ app.get('/getPokemon', function (err, resp, body) {
                 abilityNames = [];
 
                 r.abilities.forEach(element => {
-                    // element.ability.name
-                    
                    abilityNames.push(element.ability.name);
                 });
                 eq = abilityNames
-                resp.send(eq)
+                var obj = {
+                    name: r.name,
+                    id: r.id,
+                    abilities: eq
+                }
+                
+                resp.send(JSON.stringify(obj))
             })
 
            
