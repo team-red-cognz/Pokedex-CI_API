@@ -13,13 +13,13 @@ var unirest = require('unirest');
 
 
 
-app.get('/getPokemon', function (err, resp, body) {
+app.get('/getPokemon', function (req, resp) {
             
             console.log('hello')
-            var poke_name = 'blastoise'
+            var poke_name = req.query.name;
             var eq = [];
     
-            var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name + '/'); 
+            var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name); 
 
             req.end(function (res) {
                 if (res.error) throw new Error(res.error);
