@@ -24,3 +24,5 @@ exports.pokemonschema = mongoose.Schema(
         
     }
 );
+
+exports.pokemonModel = mongoose.model('pokemon', this.pokemonschema);
