@@ -11,9 +11,13 @@ var pokeschema = require('./pokemon-schema.js');
 var config = require('./config.js');
 var unirest = require('unirest');
 
-var poke_name = 'ditto'
 
-router.get('/getPokemon', function (err, res, body) {
+
+app.get('/getPokemon', function (err, resp, body) {
+            
+            console.log('hello')
+            var poke_name = 'ekans'
+            var eq = [];
     
             var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name + '/'); 
 
@@ -23,10 +27,20 @@ router.get('/getPokemon', function (err, res, body) {
                 // console.log(res.body);
 
                 var r = res.body
-                return r.name, r.id, r.abilities.forEach(element => {
-                    console.log(element.ability.name)
+                console.log(r.name)
+
+                abilityNames = [];
+
+                r.abilities.forEach(element => {
+                    // element.ability.name
+                    
+                   abilityNames.push(element.ability.name);
                 });
-            });
+                eq = abilityNames
+                resp.send(eq)
+            })
+
+           
 });
 
 
