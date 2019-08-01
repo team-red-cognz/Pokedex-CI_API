@@ -13,6 +13,16 @@ var unirest = require('unirest');
 
 
 
+
+//get request from our API
+app.get( '/getOurPokemon', function (req,resp){
+    const pokemon = pokeschema.pokemonModel.find(req.params.name);
+    res.status(200).send(JSON.stringify(pokemon));
+});
+
+
+
+//get request from pokeapi
 app.get('/getPokemon', function (req, resp) {
             
             console.log('hello')
