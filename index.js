@@ -57,8 +57,8 @@ app.get('/getPokemon', function (req, resp) {
             }
             else{
                 console.log('else')
-                console.log(typeof(pokemon))
-                resp.send(JSON.stringify(pokemon))
+                // console.log(typeof(pokemon))
+                resp.send(JSON.stringify(pokemon[0]))
             }
         }
     )
