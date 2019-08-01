@@ -11,11 +11,27 @@ var pokeschema = require('./pokemon-schema.js');
 var config = require('./config.js');
 var unirest = require('unirest');
 
+app.use(cors({ origin: true }));
+
+app.use(express.json());
 
 
+//get request from our API
+app.get( '/getOurPokemon/:name', async (req,resp) => {
+    // console.log(req.query)
+    const pokemon = await pokeschema.pokemonModel.find({name:req.params.name});
+    //console.log(pokemon.name)
+    //console.log(req.params.name)
+    resp.status(200).send(pokemon);
+});
+
+
+
+
+//get request from pokeapi
 app.get('/getPokemon', function (req, resp) {
             
-            console.log('hello')
+            // console.log('hello')
             var poke_name = req.query.name;
             var eq = [];
     
@@ -27,7 +43,7 @@ app.get('/getPokemon', function (req, resp) {
                 // console.log(res.body);
 
                 var r = res.body
-                console.log(r.name)
+                // console.log(r.name)
 
                 abilityNames = [];
 
@@ -47,11 +63,17 @@ app.get('/getPokemon', function (req, resp) {
            
 });
 
+app.post('/addPokemon', (req, res, next) => {
+    // console.log(req.body)
+    // console.log('hello post')
+    const pokemon = new pokeschema.pokemonModel(req.body);
+    return pokemon.save().then(
+        doc => res.status(201).send(doc),
+        error => next(error)
+    );
+});
 
 
-app.use(cors({ origin: true }));
-
-app.use(express.json());
 
 // app.use("/pokemon", pokeRoutes);
 
@@ -77,6 +99,26 @@ mongoose.connect(
             console.log(`Server running on port ${config.app.PORT}`);
         });
     });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

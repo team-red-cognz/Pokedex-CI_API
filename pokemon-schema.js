@@ -1,16 +1,7 @@
 var mongoose = require("mongoose");
 
 
-var abilityschema = mongoose.Schema(
-    {
-        abilityOne: {
-            type: String
-        },
-        abilityTwo: {
-            type: String
-        }
-    }
-);
+
 
 exports.pokemonschema = mongoose.Schema(
     {
@@ -20,7 +11,9 @@ exports.pokemonschema = mongoose.Schema(
         id: {
             type: String
         },
-        ability: [abilityschema]
+        abilities: [{
+            type: String
+        }]
         
     }
 );
