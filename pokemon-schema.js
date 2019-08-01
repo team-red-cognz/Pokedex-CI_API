@@ -1,8 +1,5 @@
 var mongoose = require("mongoose");
 
-
-
-
 exports.pokemonschema = mongoose.Schema(
     {
         name: {
@@ -14,7 +11,6 @@ exports.pokemonschema = mongoose.Schema(
         abilities: [{
             type: String
         }]
-        
     }
 );
 

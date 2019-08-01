@@ -3,69 +3,90 @@ var express = require('express')
 var cors = require('cors');
 var config = require('./config');
 var app = express();
-// var pokeRoutes = require("./pokemon-routes");
 
-var express = require('express');
-var router = express.Router();
 var pokeschema = require('./pokemon-schema.js');
 var config = require('./config.js');
 var unirest = require('unirest');
 
 app.use(cors({ origin: true }));
-
 app.use(express.json());
 
-
 //get request from our API
-app.get( '/getOurPokemon/:name', async (req,resp) => {
-    // console.log(req.query)
-    const pokemon = await pokeschema.pokemonModel.find({name:req.params.name});
-    //console.log(pokemon.name)
-    //console.log(req.params.name)
+app.get('/getOurPokemon/:name', async (req, resp) => {
+    const pokemon = await pokeschema.pokemonModel.find({ name: req.params.name });
     resp.status(200).send(pokemon);
 });
 
-
-
+app.get('/getOurPokemon', (req, resp) => {
+    const pokemon = pokeschema.pokemonModel.find({ name: req.params.name }).then(
+        (pokemon) => {
+            resp.status(200).send(pokemon);
+        }
+    )
+    // resp.status(200).send(pokemon);
+});
 
 //get request from pokeapi
 app.get('/getPokemon', function (req, resp) {
-            
-            // console.log('hello')
-            var poke_name = req.query.name;
-            var eq = [];
-    
-            var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name); 
+    var poke_name = req.query.name;
+    var eq = [];
 
-            req.end(function (res) {
-                if (res.error) throw new Error(res.error);
+    const pokemon = pokeschema.pokemonModel.find({ name: poke_name }).then(
+        (pokemon) => {
+            console.log(typeof(pokemon))
+            // resp.send(pokemon);
 
-                // console.log(res.body);
+            if (isEmpty(pokemon)) {
+                console.log('if')
+                var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name);
 
-                var r = res.body
-                // console.log(r.name)
+                req.end(function (res) {
+                    if (res.error) throw new Error(res.error);
+                    var r = res.body
+                    abilityNames = [];
+                    r.abilities.forEach(element => {abilityNames.push(element.ability.name);});
+                    eq = abilityNames
+                    var obj = {name: r.name,id: r.id,abilities: eq}
 
-                abilityNames = [];
 
-                r.abilities.forEach(element => {
-                   abilityNames.push(element.ability.name);
-                });
-                eq = abilityNames
-                var obj = {
-                    name: r.name,
-                    id: r.id,
-                    abilities: eq
-                }
-                
-                resp.send(JSON.stringify(obj))
-            })
+                    const pkm = new pokeschema.pokemonModel(obj);
+                    pkm.save();
+                    resp.send(JSON.stringify(obj))
+                })
 
-           
+            }
+            else{
+                console.log('else')
+                console.log(typeof(pokemon))
+                resp.send(JSON.stringify(pokemon))
+            }
+        }
+    )
+
+    // var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name);
+
+    // req.end(function (res) {
+    //     if (res.error) throw new Error(res.error);
+    //     var r = res.body
+    //     abilityNames = [];
+
+    //     r.abilities.forEach(element => {
+    //         abilityNames.push(element.ability.name);
+    //     });
+    //     eq = abilityNames
+    //     var obj = {
+    //         name: r.name,
+    //         id: r.id,
+    //         abilities: eq
+    //     }
+
+    //     resp.send(JSON.stringify(obj))
+    // })
+
+
 });
 
 app.post('/addPokemon', (req, res, next) => {
-    // console.log(req.body)
-    // console.log('hello post')
     const pokemon = new pokeschema.pokemonModel(req.body);
     return pokemon.save().then(
         doc => res.status(201).send(doc),
@@ -73,6 +94,13 @@ app.post('/addPokemon', (req, res, next) => {
     );
 });
 
+function isEmpty(obj) {
+    for(var key in obj) {
+        if(obj.hasOwnProperty(key))
+            return false;
+    }
+    return true;
+}
 
 
 // app.use("/pokemon", pokeRoutes);
@@ -99,26 +127,3 @@ mongoose.connect(
             console.log(`Server running on port ${config.app.PORT}`);
         });
     });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
