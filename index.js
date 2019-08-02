@@ -27,7 +27,7 @@ app.get('/getOurPokemon', (req, resp) => {
 });
 
 //get request from pokeapi
-app.get('/api/getPokemon', function (req, resp) {
+app.get('/getPokemon', function (req, resp) {
     var poke_name = req.query.name;
     var eq = [];
 
