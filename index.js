@@ -33,7 +33,7 @@ app.get('/getPokemon', function (req, resp) {
 
     const pokemon = pokeschema.pokemonModel.find({ name: poke_name }).then(
         (pokemon) => {
-            console.log(typeof(pokemon))
+            console.log(typeof (pokemon))
             // resp.send(pokemon);
 
             if (isEmpty(pokemon)) {
@@ -41,25 +41,29 @@ app.get('/getPokemon', function (req, resp) {
                 var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name);
 
                 req.end(function (res) {
-                    if (res.error){
+                    if (res.error) {
                         // throw new Error(res.error);
-                        var obj = {"name": "Not Found","id": "----","abilities": ['']}
+                        var obj = { "name": "Not Found", "id": "----", "abilities": [''] }
                         resp.send(JSON.stringify(obj))
+                        resp.end();
                     }
-                    var r = res.body
-                    abilityNames = [];
-                    r.abilities.forEach(element => {abilityNames.push(element.ability.name);});
-                    eq = abilityNames
-                    var obj = {name: r.name,id: r.id,abilities: eq}
+                    else {
+                        var r = res.body
+                        abilityNames = [];
+                        r.abilities.forEach(element => { abilityNames.push(element.ability.name); });
+                        eq = abilityNames
+                        var obj = { name: r.name, id: r.id, abilities: eq }
 
 
-                    const pkm = new pokeschema.pokemonModel(obj);
-                    pkm.save();
-                    resp.send(JSON.stringify(obj))
+                        const pkm = new pokeschema.pokemonModel(obj);
+                        pkm.save();
+                        resp.send(JSON.stringify(obj))
+                        resp.end();
+                    }
                 })
 
             }
-            else{
+            else {
                 console.log('else')
                 // console.log(typeof(pokemon))
                 resp.send(JSON.stringify(pokemon[0]))
@@ -99,8 +103,8 @@ app.post('/addPokemon', (req, res, next) => {
 });
 
 function isEmpty(obj) {
-    for(var key in obj) {
-        if(obj.hasOwnProperty(key))
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key))
             return false;
     }
     return true;
