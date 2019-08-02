@@ -41,7 +41,11 @@ app.get('/getPokemon', function (req, resp) {
                 var req = unirest.get('https://pokeapi.co/api/v2/pokemon/' + poke_name);
 
                 req.end(function (res) {
-                    if (res.error) throw new Error(res.error);
+                    if (res.error){
+                        // throw new Error(res.error);
+                        var obj = {"name": "Not Found","id": "----","abilities": ['']}
+                        resp.send(JSON.stringify(obj))
+                    }
                     var r = res.body
                     abilityNames = [];
                     r.abilities.forEach(element => {abilityNames.push(element.ability.name);});
